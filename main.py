@@ -38,7 +38,7 @@ import nvmath\aEsbSQd = nvmath.linalg.advanced.matmul(a, b, c, alpha=alhpa,\b\b\
 # Now benchmark with cupyx.profiler.benchmark()
 \aBddddeQfrom cupyx.profiler import benchmark
 
-\aEQbenchmark(lambda: alpha * a @ a + beta * a, n_repeat=5, n_warmup=1)
+\aEQbenchmark(lambda: alpha * a @ b + beta * c, n_repeat=5, n_warmup=1)
 benchmark(lambda: nvmath.linalg.advanced.matmul(a, b, c, alpha=alpha, beta=beta), n_repeat=5, n_warmup=1)\abQprint(\aeQ)\auQ)\abQprint("""
 
 
