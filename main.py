@@ -1,8 +1,14 @@
 import random
 import time
+import os
 from pynput.keyboard import Controller, Key
 
-NO_DELAY = False
+try:
+    import pygetwindow as gw
+except ImportError:
+    gw = None
+
+NO_DELAY = False # Set to True to disable all delays for testing
 
 # Delays
 NORMAL_DELAY = 0.08
@@ -15,150 +21,128 @@ ARROWS_DELAY = 0.05
 # Initialize the keyboard controller
 keyboard = Controller()
 
-code_to_type = """# GEMM: d = alpha*a*b\b\b@b + beta*c
-# Implement GEMM using CuPy
-import cupy as cp
-
-# Define matrix dimensions m, n, k
-m, n, k = 40, 10, 1000\b\b\b_000_000
-
-# Create random matrices
-a = cp.random.rand(m, k, dtype=cp.float32)
-b = cp.random.rand(k, n, dtype=cp.float32)
-c = cp.random.rand(m, n, dtype=cp.float32)
-
-alpha = 1.5
-beta = 0.5
-
-# Compute GEMM
-d = alpha * a @ b + beta * c
-\azBdbseSQ# Implement GEMM using nvmath-python
-import nvmath\aEsbSQd = nvmath.linalg.advanced.matmul(a, b, c, alpha=alhpa,\b\b\b\bpha, beta=beta)
-\azsuuubSQ
-# Now benchmark with cupyx.profiler.benchmark()
-\aBddddeQfrom cupyx.profiler import benchmark
-
-\aEQbenchmark(lambda: alpha * a @ a + beta * a, n_repeat=5, n_warmup=1)
-benchmark(lambda: nvmath.linalg.advanced.matmul(a, b, c, alpha=alpha, beta=beta), n_repeat=5, n_warmup=1)\abQprint(\aeQ)\auQ)\abQprint("""
-
+# Read code_to_type from file
+def read_code_to_type(filename="code_to_type.txt"):
+    if not os.path.exists(filename):
+        print(f"File {filename} not found.")
+        return ""
+    with open(filename, "r", encoding="utf-8") as f:
+        raw = f.read()
+        # Interpret backslash escapes (e.g., \n, \b, etc.)
+        return raw.encode('utf-8').decode('unicode_escape')
 
 def generate_random_delay(average_delay = NORMAL_DELAY):
     # Delays can be faster for consecutive letters and slower for punctuation
     # or before starting a new word.
     if NO_DELAY:
-        return 0.0
+        return 0.02
     else:
         return random.uniform(0.8 * average_delay, 1.2 * average_delay)
 
 def simulate_typing(text):
     arrows_flag = False
-    for char in text:
-        delay = generate_random_delay()
 
-        if arrows_flag:
-            # u - up arrow
-            # d - down arrow
-            # l - left arrow
-            # r - right arraw
-            # s - press shift
-            # S - release shift
-            # e - end of line
-            # b - beginning of line
-            # E - end of file
-            # B - beginning of file
-            # U - page up
-            # D - page down
-            # z - delay for 5 sec
-            # Q - exit arrows mode
+    def handle_arrow_command(char):
+        arrow_actions = {
+            'u': lambda: (keyboard.press(Key.up), keyboard.release(Key.up)),
+            'd': lambda: (keyboard.press(Key.down), keyboard.release(Key.down)),
+            'l': lambda: (keyboard.press(Key.left), keyboard.release(Key.left)),
+            'r': lambda: (keyboard.press(Key.right), keyboard.release(Key.right)),
+            's': lambda: keyboard.press(Key.shift),
+            'S': lambda: keyboard.release(Key.shift),
+            'e': lambda: (keyboard.press(Key.end), keyboard.release(Key.end)),
+            'b': lambda: (keyboard.press(Key.home), keyboard.release(Key.home)),
+            'E': lambda: (keyboard.press(Key.ctrl), keyboard.press(Key.end), keyboard.release(Key.end), keyboard.release(Key.ctrl)),
+            'B': lambda: (keyboard.press(Key.ctrl), keyboard.press(Key.home), keyboard.release(Key.home), keyboard.release(Key.ctrl)),
+            'U': lambda: (keyboard.press(Key.page_up), keyboard.release(Key.page_up)),
+            'D': lambda: (keyboard.press(Key.page_down), keyboard.release(Key.page_down)),
+            'C': lambda: (keyboard.press(Key.esc), keyboard.release(Key.esc)),
+            'z': lambda: time.sleep(5),
+        }
+        if char == 'Q':
+            return 'exit'
+        elif char in arrow_actions:
+            arrow_actions[char]()
+        else:
+            raise ValueError(f"Unknown escape command: {char}")
 
-            if char == 'Q':
-                arrows_flag = False
-            elif char == 'u':
-                keyboard.press(Key.up)
-                keyboard.release(Key.up)
-            elif char == 'd':
-                keyboard.press(Key.down)
-                keyboard.release(Key.down)
-            elif char == 'l':
-                keyboard.press(Key.left)
-                keyboard.release(Key.right)
-            elif char == 'r':
-                keyboard.press(Key.right)
-                keyboard.release(Key.right)
-            elif char == 's':
-                keyboard.press(Key.shift)
-            elif char == 'S':
-                keyboard.release(Key.shift)
-            elif char == 'e':
-                keyboard.press(Key.end)
-                keyboard.release(Key.end)
-            elif char == 'b':
-                keyboard.press(Key.home)
-                keyboard.release(Key.home)
-            elif char == 'E':
-                with keyboard.pressed(Key.ctrl):
-                    keyboard.press(Key.end)
-                    keyboard.release(Key.end)
-            elif char == 'B':
-                with keyboard.pressed(Key.ctrl):
-                    keyboard.press(Key.home)
-                    keyboard.release(Key.home)
-            elif char == 'U':
-                keyboard.press(Key.page_up)
-                keyboard.release(Key.page_up)
-            elif char == 'D':
-                keyboard.press(Key.page_down)
-                keyboard.release(Key.page_down)
-            elif char == 'z':
-                time.sleep(5)
-            else:
-                raise ValueError
-        else:             
-            if char.isupper():
-                # For uppercase characters, press and hold Shift.
-                with keyboard.pressed(Key.shift):
-                    keyboard.press(char.lower())
-                    keyboard.release(char.lower())
-            elif char in '`~!@#$%^&*()_+{}|:"<>?':
-                # For special characters that require Shift, press Shift.
-                with keyboard.pressed(Key.shift):
-                    delay = generate_random_delay(SP_CHAR_DELAY)
-                    keyboard.press(char)
-                    keyboard.release(char)
-            elif char == '\n':
-                # Handle newlines as pressing the Enter key.
-                keyboard.press(Key.enter)
-                keyboard.release(Key.enter)
-                # Add a slightly longer delay after a newline.
-                delay = generate_random_delay(NEWLINE_DELAY)
-            elif char == '\b':
-                # Introduce greater delay when removing symbols
-                delay = generate_random_delay(BACKSPACE_DELAY)
-                keyboard.press(Key.backspace)
-                keyboard.release(Key.backspace)
-            elif char == ' ':
-                # When pressing word delimiter, increase delay
-                delay = generate_random_delay(SPACE_DELAY)
-                keyboard.press(Key.space)
-                keyboard.release(Key.space)
-            elif char == '\a':
-                # Enter arrows mode. Next sequence of characters interpreted as arrow controls
-                delay = generate_random_delay(ARROWS_DELAY)
-                arrows_flag = True
-            else:
-                # For all other characters, just press and release.
+    special_key_actions = {
+        '\n': lambda: (keyboard.press(Key.enter), keyboard.release(Key.enter)),
+        '\b': lambda: (keyboard.press(Key.backspace), keyboard.release(Key.backspace)),
+        ' ': lambda: (keyboard.press(Key.space), keyboard.release(Key.space)),
+    }
+
+    def get_delay(char):
+        if char == '\n':
+            return generate_random_delay(NEWLINE_DELAY)
+        elif char == '\b':
+            return generate_random_delay(BACKSPACE_DELAY)
+        elif char == ' ':
+            return generate_random_delay(SPACE_DELAY)
+        elif char == '\a':
+            return generate_random_delay(ARROWS_DELAY)
+        elif char in '`~!@#$%^&*()_+{}|:"<>?':
+            return generate_random_delay(SP_CHAR_DELAY)
+        else:
+            return generate_random_delay()
+
+    def handle_regular_char(char):
+        if char.isupper():
+            with keyboard.pressed(Key.shift):
+                keyboard.press(char.lower())
+                keyboard.release(char.lower())
+        elif char in '`~!@#$%^&*()_+{}|:"<>?':
+            with keyboard.pressed(Key.shift):
                 keyboard.press(char)
                 keyboard.release(char)
+        elif char in special_key_actions:
+            special_key_actions[char]()
+        else:
+            keyboard.press(char)
+            keyboard.release(char)
 
-        # Introduce a sleep after every keypress.
+    text_iter = iter(text)
+    while True:
+        try:
+            char = next(text_iter)
+        except StopIteration:
+            break
+
+        delay = get_delay(char)
+
+        if arrows_flag:
+            result = handle_arrow_command(char)
+            if result == 'exit':
+                arrows_flag = False
+            if char == 'z':
+                continue
+        else:
+            if char == '\a':
+                arrows_flag = True
+            else:
+                handle_regular_char(char)
+
         time.sleep(delay)
 
-# Wait a few seconds to give you time to switch to the target window
-# (e.g., a text editor, IDE, or terminal).
-print("Switch to the target window in 10 seconds...")
-time.sleep(10)
+# Utility to check if expected window is focused
+def is_target_window_focused(expected_title_substring):
+    if gw is None:
+        print("pygetwindow not installed. Skipping window focus check.")
+        return True
+    win = gw.getActiveWindow()
+    if win and expected_title_substring.lower() in win.title.lower():
+        return True
+    print(f"Active window is '{win.title if win else None}'. Waiting for '{expected_title_substring}' window...")
+    return False
 
-# Execute the function to type the code
+# Check if target window is focused before typing
+expected_title = "PowerShell"  # Change to your target application's window title substring
+while not is_target_window_focused(expected_title):
+    print("Please focus the target application window...")
+    time.sleep(2)
+
+# Read code from file and type it
+code_to_type = read_code_to_type("code_to_type_vim.txt")
 simulate_typing(code_to_type)
 
 print("Typing complete.")
