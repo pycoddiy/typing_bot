@@ -143,7 +143,6 @@ name = "typing-bot"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
-<<<<<<< HEAD
     { name = "pygetwindow" },
     { name = "pynput" },
 ]
@@ -153,10 +152,3 @@ requires-dist = [
     { name = "pygetwindow", specifier = ">=0.0.9" },
     { name = "pynput", specifier = ">=1.8.1" },
 ]
-=======
-    { name = "nvmath-python", extra = ["cu12"] },
-]
-
-[package.metadata]
-requires-dist = [{ name = "nvmath-python", extras = ["cu12"], specifier = ">=0.6.0" }]
->>>>>>> 3b76268adeb01e31b3419fe737bb33f43e1d7d2e
