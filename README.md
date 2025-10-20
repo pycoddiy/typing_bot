@@ -49,3 +49,31 @@ Usage: `python tyrec.py [input_file] [options]`
 
 - TyRec will print the processed input to stdout before simulating typing.
 - If you want to include literal backslash escape sequences (for example `\\n`) in your input file, ensure they are escaped appropriately for the file encoding and how you're writing the file — TyRec decodes common escape sequences using Python's `unicode_escape` decoding when reading the input file.
+
+## Running TyRec from anywhere (add to PATH)
+
+If you want to run `tyrec.py` from any working directory, add the repository folder (the folder containing `tyrec.py`) to your PATH so that PowerShell (or another shell) can find it.
+
+Examples for PowerShell (run in an elevated shell if you want to update the system PATH):
+
+- Run once in the current session by prepending the folder to the PATH environment variable:
+
+```powershell
+$env:PATH = "C:\path\to\typing_bot;" + $env:PATH
+python tyrec.py CODE_FILE.txt
+```
+
+- Make the PATH change permanent for the current user (persist across sessions):
+
+```powershell
+[Environment]::SetEnvironmentVariable("PATH", $env:PATH + ";C:\path\to\typing_bot", "User")
+# you may need to restart PowerShell for the change to take effect
+```
+
+- Alternatively, call the script by full path without modifying PATH:
+
+```powershell
+python C:\path\to\typing_bot\tyrec.py C:\path\to\code_to_type.txt
+```
+
+Replace `C:\path\to\typing_bot` with the actual absolute path to your repository.
