@@ -78,14 +78,13 @@ def start_pause_listener():
 
     def _on_press(key):
         try:
-            # if key == Key.pause:
-            #     if LIVE_INPUT_MODE.is_set():
-            #         LIVE_INPUT_MODE.clear()
-            #         print("[tyrec] Pause pressed: resuming file processing...")
-            #     else:
-            #         LIVE_INPUT_MODE.set()
-            #         print("[tyrec] Pause pressed: pausing file processing. Recording live keyboard input. Press Pause again to resume.")
-            pass
+            if key == Key.pause:
+                if LIVE_INPUT_MODE.is_set():
+                    LIVE_INPUT_MODE.clear()
+                    print("[tyrec] Pause pressed: resuming file processing...")
+                else:
+                    LIVE_INPUT_MODE.set()
+                    print("[tyrec] Pause pressed: pausing file processing. Recording live keyboard input. Press Pause again to resume.")
         except Exception:
             pass
 
