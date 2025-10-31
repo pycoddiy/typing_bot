@@ -129,7 +129,7 @@ python tyrec.py scripts/code_to_type_test.sxt
 
 The project uses GitHub Actions for continuous integration:
 
-- **Tests**: Runs on Python 3.8-3.12 for every push
+- **Tests**: Runs on Python 3.9-3.12 for every push
 - **Code Quality**: Runs pre-commit, type checking, and security scans
 
 ### Local CI Simulation
