@@ -2,8 +2,8 @@
 
 __version__ = "0.1.0"
 
-import struct_editor
-import structured_capture
-import tyrec
+from . import struct_editor
+from . import structured_capture
+from . import tyrec
 
 __all__ = ["tyrec", "structured_capture", "struct_editor"]

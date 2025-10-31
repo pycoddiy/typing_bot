@@ -21,12 +21,7 @@ import tempfile
 from pathlib import Path
 from typing import List, Optional, Tuple
 
-# Add current directory to Python path to import structured_capture
-current_dir = os.path.dirname(os.path.abspath(__file__))
-if current_dir not in sys.path:
-    sys.path.insert(0, current_dir)
-
-from structured_capture import StructuredParser
+from .structured_capture import StructuredParser
 
 
 class StructEditor:

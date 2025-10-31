@@ -22,11 +22,7 @@ from typing import List, Optional, Tuple
 try:
     from .tyrec import main as capture_main
 except ImportError:
-    # Fallback for direct execution - add current directory to path
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    if current_dir not in sys.path:
-        sys.path.insert(0, current_dir)
-    from tyrec import main as capture_main
+    from .tyrec import main as capture_main
 
 
 class StructuredParser:

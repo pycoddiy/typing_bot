@@ -6,8 +6,8 @@ Test the simulation with a simple example.
 import os
 import tempfile
 
-from struct_editor import StructEditor
-from structured_capture import StructuredParser
+from typing_bot.struct_editor import StructEditor
+from typing_bot.structured_capture import StructuredParser
 
 
 def test_simple_simulation():

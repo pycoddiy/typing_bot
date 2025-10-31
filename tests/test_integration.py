@@ -79,7 +79,7 @@ class TestModuleIntegration:
 
     def test_structured_parser_import(self):
         """Test that StructuredParser can be imported and used."""
-        from structured_capture import StructuredParser
+        from typing_bot.structured_capture import StructuredParser
 
         parser = StructuredParser()
         assert parser is not None
@@ -87,7 +87,7 @@ class TestModuleIntegration:
     def test_structured_editor_import(self):
         """Test that StructEditor can be imported."""
         try:
-            from struct_editor import StructEditor
+            from typing_bot.struct_editor import StructEditor
 
             # Note: StructEditor may require curses, so we just test import
             assert StructEditor is not None

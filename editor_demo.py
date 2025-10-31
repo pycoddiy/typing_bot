@@ -15,7 +15,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 if current_dir not in sys.path:
     sys.path.insert(0, current_dir)
 
-from struct_editor import StructuredParser
+from typing_bot.struct_editor import StructuredParser
 
 
 def demo_editor_features():

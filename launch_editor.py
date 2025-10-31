@@ -55,7 +55,7 @@ def main():
 
     try:
         # Import and run the editor
-        from struct_editor import main as editor_main
+        from typing_bot.struct_editor import main as editor_main
 
         editor_main()
     except KeyboardInterrupt:
