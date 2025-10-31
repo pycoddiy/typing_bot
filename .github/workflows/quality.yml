@@ -18,29 +18,25 @@ jobs:
       with:
         python-version: "3.11"
 
-    - name: Create virtual environment
+    - name: Install uv
       run: |
-        python -m venv venv
-        source venv/bin/activate
-        python -m pip install --upgrade pip
+        curl -LsSf https://astral.sh/uv/install.sh | sh
+        echo "$HOME/.cargo/bin" >> $GITHUB_PATH
 
     - name: Install dependencies
       run: |
-        source venv/bin/activate
-        pip install -e ".[dev]"
+        uv venv --python 3.11
+        uv pip install -e ".[dev]"
 
     - name: Run pre-commit
       run: |
-        source venv/bin/activate
-        pre-commit run --all-files
+        uv run pre-commit run --all-files
 
     - name: Run type checking
       run: |
-        source venv/bin/activate
-        mypy --ignore-missing-imports tyrec.py structured_capture.py struct_editor.py || true
+        uv run mypy --ignore-missing-imports tyrec.py structured_capture.py struct_editor.py || true
 
     - name: Security check with bandit
       run: |
-        source venv/bin/activate
-        bandit -r . -f json -o bandit-report.json || true
-        bandit -r . || true
+        uv run bandit -r . -f json -o bandit-report.json || true
+        uv run bandit -r . || true

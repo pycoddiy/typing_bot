@@ -3,7 +3,7 @@ name = "typing-bot"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.8"
 dependencies = [
     "mock>=5.2.0",
     "pygetwindow>=0.0.9",
@@ -23,7 +23,7 @@ dev = [
 ]
 
 [project.scripts]
-tyrec = "capture:main"
+tyrec = "tyrec:main"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -43,12 +43,23 @@ markers = [
 ]
 
 [build-system]
-requires = ["hatchling>=1.12"]
+requires = ["hatchling>=1.21.0"]
 build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["."]
+
+[tool.hatch.build.targets.sdist]
+exclude = [
+  "/.github",
+  "/.vscode",
+  "/tests",
+  "*.egg-info",
+]
 
 [tool.black]
 line-length = 88
-target-version = ['py313']
+target-version = ['py38', 'py39', 'py310', 'py311', 'py312']
 include = '\.pyi?$'
 extend-exclude = '''
 /(
@@ -71,7 +82,7 @@ line_length = 88
 known_first_party = ["typing_bot", "structured_capture", "struct_editor"]
 
 [tool.mypy]
-python_version = "3.13"
+python_version = "3.8"
 warn_return_any = false
 warn_unused_configs = true
 disallow_untyped_defs = false

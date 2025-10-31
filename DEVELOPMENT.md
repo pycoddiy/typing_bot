@@ -6,6 +6,7 @@ This guide explains how to set up your development environment for the typing_bo
 
 - Python 3.8 or higher
 - Git
+- uv (recommended) or pip
 
 ## Setup Instructions
 
@@ -16,39 +17,98 @@ git clone https://github.com/pycoddiy/typing_bot.git
 cd typing_bot
 ```
 
-### 2. Create Virtual Environment
+### 2. Install uv (Recommended)
+
+```bash
+# Install uv - the fast Python package manager
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Or with pip
+pip install uv
+```
+
+### 3. Setup with uv (Recommended)
+
+```bash
+# Create virtual environment and install dependencies
+uv venv --python 3.11
+uv pip install -e ".[dev]"
+
+# Set up pre-commit hooks
+uv run pre-commit install
+```
+
+### Alternative: Setup with pip
 
 ```bash
 # Create virtual environment
 python -m venv venv
+source venv/bin/activate  # Linux/macOS
+# venv\Scripts\activate    # Windows
 
-# Activate virtual environment
-# On Linux/macOS:
-source venv/bin/activate
-
-# On Windows:
-venv\Scripts\activate
-```
-
-### 3. Install Dependencies
-
-```bash
-# Install the project with development dependencies
+# Install dependencies
 pip install -e ".[dev]"
-```
 
-### 4. Set up Pre-commit Hooks
-
-```bash
-# Install pre-commit hooks (one-time setup)
+# Set up pre-commit hooks
 pre-commit install
 ```
 
 ## Development Workflow
 
-### Running Tests
+### Running Tests (with uv)
 
 ```bash
+# Run all tests
+uv run pytest -v
+
+# Run tests with coverage
+uv run coverage run -m pytest
+uv run coverage report
+uv run coverage html  # Creates htmlcov/ directory
+```
+
+### Running Tests (with pip)
+
+```bash
+# Activate virtual environment (if not already active)
+source venv/bin/activate
+
+# Run all tests
+pytest -v
+
+# Run tests with coverage
+coverage run -m pytest
+coverage report
+coverage html  # Creates htmlcov/ directory
+```
+
+### Code Quality Checks (with uv)
+
+```bash
+# Run all pre-commit checks
+uv run pre-commit run --all-files
+
+# Run individual tools
+uv run black .                    # Format code
+uv run isort .                    # Sort imports
+uv run flake8 .                   # Lint code
+uv run mypy tyrec.py             # Type check
+uv run bandit -r .               # Security scan
+```
+
+### Code Quality Checks (with pip)
+
+```bash
+# Run all pre-commit checks
+pre-commit run --all-files
+
+# Run individual tools
+black .                    # Format code
+isort .                    # Sort imports
+flake8 .                   # Lint code
+mypy tyrec.py             # Type check
+bandit -r .               # Security scan
+```
 # Activate virtual environment (if not already active)
 source venv/bin/activate
 
