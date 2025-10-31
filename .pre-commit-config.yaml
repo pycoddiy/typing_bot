@@ -6,9 +6,9 @@ repos:
     hooks:
       # Git
       - id: check-added-large-files
-      # - id: no-commit-to-branch
-      #   name: "ensure no direct commit to main branch"
-      #   args: [--branch, "main"]
+      - id: no-commit-to-branch
+        name: "ensure no direct commit to main branch"
+        args: [--branch, "main"]
       - id: check-case-conflict
 
       # Contents
