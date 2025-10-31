@@ -43,7 +43,7 @@ markers = [
 ]
 
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling>=1.12"]
 build-backend = "hatchling.build"
 
 [tool.black]
