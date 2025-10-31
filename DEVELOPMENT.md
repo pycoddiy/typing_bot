@@ -109,29 +109,6 @@ flake8 .                   # Lint code
 mypy tyrec.py             # Type check
 bandit -r .               # Security scan
 ```
-# Activate virtual environment (if not already active)
-source venv/bin/activate
-
-# Run all tests
-pytest -v
-
-# Run tests with coverage
-coverage run -m pytest
-coverage report
-coverage html  # Creates htmlcov/ directory
-```
-
-### Code Quality Checks
-
-```bash
-# Run all pre-commit checks
-pre-commit run --all-files
-
-# Run individual tools
-black .                    # Format code
-isort .                    # Sort imports
-flake8 .                   # Lint code
-mypy tyrec.py             # Type check
 bandit -r .               # Security scan
 ```
 
