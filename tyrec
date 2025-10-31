@@ -4,7 +4,7 @@
 This mirrors the console_scripts entry 'tyrec' in pyproject.toml.
 """
 
-from capture import main
+from tyrec import main
 
 if __name__ == "__main__":
     main()
