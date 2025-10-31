@@ -16,7 +16,7 @@ import re
 import sys
 import tempfile
 from pathlib import Path
-from typing import List, Optional, Tuple, Union
+from typing import List, Optional, Tuple
 
 # Import the capture function with fallback for different import contexts
 try:
