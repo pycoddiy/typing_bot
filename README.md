@@ -4,11 +4,40 @@ TyRec (tyrec.py) simulates typing from an input file and supports a small set of
 
 ## Table of Contents
 
+- [Installation](#installation)
 - [New: Structured Format & Interactive Editor](#new-structured-format--interactive-editor)
 - [Documentation](#documentation)
 - [Interactive Editor Features](#interactive-editor-features)
 - [Legacy Format (tyrec.py)](#legacy-format-tyrecpy)
 - [Running TyRec from anywhere](#running-tyrec-from-anywhere-add-to-path)
+
+## Installation
+
+### Basic Installation
+
+To install typing-bot for basic usage:
+
+```bash
+pip install typing-bot
+```
+
+### Development Installation
+
+If you need to run the project's tests or contribute to development, install with dev dependencies:
+
+```bash
+pip install -e '.[dev]'
+```
+
+The dev installation includes:
+- **pytest** - For running tests
+- **pre-commit** - For code quality checks
+- **black, isort, flake8** - For code formatting and linting
+- **mypy** - For type checking
+- **coverage** - For test coverage reports
+- **bandit** - For security scanning
+
+See [DEVELOPMENT.md](DEVELOPMENT.md) for complete development setup instructions.
 
 ## New: Structured Format & Interactive Editor
 
