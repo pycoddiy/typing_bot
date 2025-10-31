@@ -50,7 +50,7 @@ repos:
         args: [
           "--max-line-length=88",
           "--select=E,W,F",
-          "--ignore=E203,E501,W503,E402,F401,F841",  # Relaxed for demo code
+          "--ignore=E203,E501,W503,E402,F401,F841,E704",  # Added E704 for Black compatibility
           "--exclude=tests/*,test_*.py,*_test.py,examples/*"  # Exclude test files
         ]
 

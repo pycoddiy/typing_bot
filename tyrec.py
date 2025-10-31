@@ -3,13 +3,28 @@ import os
 import random
 import threading
 import time
-from typing import Any, Optional, Union
+from typing import Any, Literal, Optional, Protocol, Union, runtime_checkable
 
 # Optional: For window focus checking (pygetwindow)
 try:
     import pygetwindow as gw
 except Exception:
     gw = None
+
+
+# Define a protocol for the Controller interface
+@runtime_checkable
+class ControllerProtocol(Protocol):
+    def press(self, k: Any) -> None: ...
+
+    def release(self, k: Any) -> None: ...
+
+    def __enter__(self) -> "ControllerProtocol": ...
+
+    def __exit__(self, exc_type: Any, exc: Any, tb: Any) -> Literal[False]: ...
+
+    def pressed(self, key: Any) -> Any: ...
+
 
 # Try to import real pynput; if it's not available provide dry-run dummies so the
 # module can be imported and exercised in CI/dev without GUI access.
@@ -50,7 +65,7 @@ except Exception:
         def __enter__(self) -> "Controller":
             return self
 
-        def __exit__(self, exc_type: Any, exc: Any, tb: Any) -> bool:
+        def __exit__(self, exc_type: Any, exc: Any, tb: Any) -> Literal[False]:
             return False
 
         # Provide a context manager compatible with pynput's Controller.pressed(key)
@@ -63,7 +78,7 @@ except Exception:
                 self._controller.press(self._key)
                 return None
 
-            def __exit__(self, exc_type: Any, exc: Any, tb: Any) -> bool:
+            def __exit__(self, exc_type: Any, exc: Any, tb: Any) -> Literal[False]:
                 self._controller.release(self._key)
                 return False
 
