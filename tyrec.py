@@ -62,7 +62,7 @@ except Exception:
         def release(self, k: Any) -> None:
             print(f"[dry-run] release: {k}")
 
-        def __enter__(self) -> "Controller":
+        def __enter__(self) -> "ControllerProtocol":
             return self
 
         def __exit__(self, exc_type: Any, exc: Any, tb: Any) -> Literal[False]:
@@ -70,7 +70,7 @@ except Exception:
 
         # Provide a context manager compatible with pynput's Controller.pressed(key)
         class _PressedContext:
-            def __init__(self, controller: "Controller", key: Any) -> None:
+            def __init__(self, controller: "ControllerProtocol", key: Any) -> None:
                 self._controller = controller
                 self._key = key
 
