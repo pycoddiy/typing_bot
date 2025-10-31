@@ -47,7 +47,7 @@ requires = ["hatchling>=1.21.0"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["."]
+packages = ["typing_bot"]
 
 [tool.hatch.build.targets.sdist]
 exclude = [
