@@ -164,3 +164,13 @@ python C:\path\to\typing_bot\tyrec.py C:\path\to\code_to_type.txt
 ```
 
 Replace `C:\path\to\typing_bot` with the actual absolute path to your repository.
+
+## Development and Testing
+
+For users who need to run the project's tests or contribute to development, install the development dependencies:
+
+```bash
+pip install -e '.[dev]'
+```
+
+This installs the package in editable mode along with development tools like pytest, pre-commit, and code quality checkers. For detailed development setup instructions, see [DEVELOPMENT.md](DEVELOPMENT.md).
