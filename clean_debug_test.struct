@@ -1,5 +1,0 @@
-<CODE: PYTHON>
-    data = [1, 2, 3]
-    {{IF_NAME_MAIN}}
-        {{PRINT_DEBUG}}
-</CODE>

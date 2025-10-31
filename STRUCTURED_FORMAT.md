@@ -43,7 +43,7 @@ The structured format uses XML-like tags to separate code content from control c
 
 ### Generic Navigation Commands
 - `ARROW_UP [count]` - Move cursor up (default: 1)
-- `ARROW_DOWN [count]` - Move cursor down (default: 1)  
+- `ARROW_DOWN [count]` - Move cursor down (default: 1)
 - `ARROW_LEFT [count]` - Move cursor left (default: 1)
 - `ARROW_RIGHT [count]` - Move cursor right (default: 1)
 - `HOME` - Move to beginning of line
@@ -134,11 +134,11 @@ Use `{{SHORTCUT}}` syntax to expand common Python patterns:
 <CODE: PYTHON>
     {{IMPORT_NUMPY}}
     {{IMPORT_MATPLOTLIB}}
-    
+
     data = np.random.randn(100)
     plt.plot(data)
     plt.show()
-    
+
     {{IF_NAME_MAIN}}
         {{PRINT_DEBUG}}
 </CODE>
@@ -242,7 +242,7 @@ Use `{{SHORTCUT}}` syntax to expand common Python patterns:
     # Navigate to top and select all content
     CTRL_HOME
     SHIFT_PRESS
-    CTRL_END  
+    CTRL_END
     SHIFT_RELEASE
 </COMMANDS>
 ```
@@ -279,14 +279,14 @@ Use `{{SHORTCUT}}` syntax to expand common Python patterns:
 
 ### Interactive Editor
 
-Edit .struct files with live preview using the interactive editor:
+Edit .sxt files with live preview using the interactive editor:
 
 ```bash
 # Launch editor with new file
 python struct_editor.py
 
 # Edit existing file
-python struct_editor.py example.struct
+python struct_editor.py examples/example.sxt
 
 # Or use the launcher (with error handling)
 python launch_editor.py
@@ -305,17 +305,17 @@ python launch_editor.py
 
 Run a structured file:
 ```bash
-python structured_capture.py input.struct --active_window_title "VS Code"
+python structured_capture.py input.sxt --active_window_title "VS Code"
 ```
 
 Preview the converted format without running:
 ```bash
-python structured_capture.py input.struct --preview
+python structured_capture.py input.sxt --preview
 ```
 
 Convert to legacy format:
 ```bash
-python structured_capture.py input.struct --output legacy_file.txt
+python structured_capture.py input.sxt --output legacy_file.txt
 ```
 
 ### Command Line Options
@@ -362,7 +362,7 @@ print("Hello")\b\b\b\b\bWorld")
 
 ## File Extensions
 
-- Use `.struct` extension for structured format files
+- Use `.sxt` extension for structured format files
 - Use `.txt` extension for legacy format files
 
 ## Supported Tool Specifiers

@@ -1,0 +1,14 @@
+<CODE>
+    Hello World Test
+</CODE>
+
+<COMMANDS>
+    ARROW_LEFT 5
+    BACKSPACE 3
+    ARROW_UP 1
+    ARROW_RIGHT 6
+</COMMANDS>
+
+<CODE>
+    Final text
+</CODE>

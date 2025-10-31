@@ -1,0 +1,70 @@
+<CODE: PYTHON>
+    # Comprehensive demo of short command syntax
+    import numpy as np
+    import matplotlib.pyplot as plt
+    
+    # Create sample data
+    x = np.linspace(0, 2*np.pi, 100)
+    y1 = np.sin(x)
+    y2 = np.cos(x)
+    
+    # Plot the data
+    plt.figure(figsize=(10, 6))
+    plt.plot(x, y1, label='sin(x)')
+    plt.plot(x, y2, label='cos(x)')
+    plt.legend()
+    plt.title('Trigonometric Functions')
+    plt.show()
+    
+    {{IF_NAME_MAIN}}
+        {{PRINT_DEBUG}}
+</CODE>
+
+<COMMANDS>
+    # Navigate to debug placeholder - use short syntax!
+    <l3>
+</COMMANDS>
+
+<CODE>
+    x.shape, y1.shape, y2.shape
+</CODE>
+
+<COMMANDS>
+    # Move to end, then create space for analysis
+    <E>
+    <e2>
+</COMMANDS>
+
+<CODE: PYTHON>
+    # Statistical analysis
+    {{TRY_EXCEPT}}
+        stats = {
+            'x_range': (x.min(), x.max()),
+            'y1_range': (y1.min(), y1.max()),
+            'y2_range': (y2.min(), y2.max()),
+            'correlation': np.corrcoef(y1, y2)[0, 1]
+        }
+        print(f"Statistics: {stats}")
+        
+        # Additional processing
+        combined = y1 + y2
+        print(f"Combined range: ({combined.min():.3f}, {combined.max():.3f})")
+</CODE>
+
+<COMMANDS>
+    # Navigate up to add more debug info
+    <u3>
+    <E>
+    <e>
+</COMMANDS>
+
+<CODE>
+        print(f"Data shapes - x: {x.shape}, y1: {y1.shape}, y2: {y2.shape}")
+</CODE>
+
+<COMMANDS: VSCODE>
+    # Final formatting with short syntax
+    <h>
+    FORMAT
+    SAVE
+</COMMANDS>

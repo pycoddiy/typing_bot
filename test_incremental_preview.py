@@ -15,9 +15,11 @@ if current_dir not in sys.path:
 from struct_editor import StructEditor
 from structured_capture import StructuredParser
 
+
 class TestEditor(StructEditor):
     def __init__(self):
         self.parser = StructuredParser()
+
 
 def test_incremental_preview():
     content = """<CODE: PYTHON>
@@ -27,11 +29,11 @@ def test_incremental_preview():
 </CODE>"""
 
     editor = TestEditor()
-    lines = content.split('\n')
-    
+    lines = content.split("\n")
+
     print("Testing incremental command preview:")
     print("=" * 50)
-    
+
     for i in range(len(lines)):
         print(f"\nLine {i}: {lines[i]}")
         try:
@@ -41,6 +43,7 @@ def test_incremental_preview():
                 print(f"  {j+1}: {line}")
         except Exception as e:
             print(f"Error: {e}")
+
 
 if __name__ == "__main__":
     test_incremental_preview()

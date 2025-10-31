@@ -2,10 +2,18 @@
 
 TyRec (tyrec.py) simulates typing from an input file and supports a small set of escape/command sequences, an "arrow mode", and live input recording via the Pause/Break key.
 
+## Table of Contents
+
+- [New: Structured Format & Interactive Editor](#new-structured-format--interactive-editor)
+- [Documentation](#documentation)
+- [Interactive Editor Features](#interactive-editor-features)
+- [Legacy Format (tyrec.py)](#legacy-format-tyrecpy)
+- [Running TyRec from anywhere](#running-tyrec-from-anywhere-add-to-path)
+
 ## New: Structured Format & Interactive Editor
 
 **🎉 NEW FEATURES:**
-- **Structured Format**: Write readable `.struct` files instead of cryptic escape sequences
+- **Structured Format**: Write readable `.sxt` files instead of cryptic escape sequences
 - **Interactive Editor**: Visual editor with live preview and syntax highlighting
 - **Tool-Specific Commands**: Context-aware shortcuts for VIM, VS Code, Shell, and Python
 
@@ -13,11 +21,11 @@ TyRec (tyrec.py) simulates typing from an input file and supports a small set of
 
 ```bash
 # Use the interactive editor
-python struct_editor.py example.struct
+python struct_editor.py examples/example.sxt
 
 # Or convert and run structured files
-python structured_capture.py example.struct --preview
-python structured_capture.py example.struct --active_window_title "VS Code"
+python structured_capture.py examples/example.sxt --preview
+python structured_capture.py examples/example.sxt --active_window_title "VS Code"
 ```
 
 **Structured format example:**
@@ -34,7 +42,39 @@ python structured_capture.py example.struct --active_window_title "VS Code"
 </COMMANDS>
 ```
 
+**📖 Quick Navigation:**
+- [Documentation](#documentation) - Complete guides and references
+- [Interactive Editor](#interactive-editor-features) - Visual editor features
+- [Examples](examples/) - Ready-to-use examples and demos
+- [Legacy Format](#legacy-format-tyrecpy) - Original tyrec.py documentation
+
 See [STRUCTURED_FORMAT.md](STRUCTURED_FORMAT.md) for complete documentation.
+
+## Documentation
+
+### 📚 Complete Documentation
+
+- **[STRUCTURED_FORMAT.md](STRUCTURED_FORMAT.md)** - Complete guide to the structured format syntax, commands, and templates
+- **[EDITOR_IMPLEMENTATION.md](EDITOR_IMPLEMENTATION.md)** - Interactive editor features, interface design, and usage guide
+- **[SHORT_COMMANDS.md](SHORT_COMMANDS.md)** - Concise short command syntax (`<u5>`, `<l3>`, etc.) for improved readability
+- **[SYNTAX_HIGHLIGHTING.md](SYNTAX_HIGHLIGHTING.md)** - Context-aware Python syntax highlighting features
+
+### 📁 Directory Documentation
+
+## Directory Structure
+
+- **[examples/README.md](examples/README.md)** - Example .sxt files and demonstration usage
+- **[scripts/README.md](scripts/README.md)** - Utility scripts and development tools
+- **[tests/README.md](tests/README.md)** - Development test files and testing documentation
+
+### 🚀 Getting Started
+
+1. **Start Here**: Try the [interactive editor](#interactive-editor-features) with `python struct_editor.py examples/example.sxt`
+2. **Learn the Format**: Read [STRUCTURED_FORMAT.md](STRUCTURED_FORMAT.md) for complete syntax guide
+3. **Explore Examples**: Browse [examples/](examples/) directory for real-world usage patterns
+4. **Advanced Features**: Check [SHORT_COMMANDS.md](SHORT_COMMANDS.md) for productivity shortcuts
+
+---
 
 ## Interactive Editor Features
 
@@ -44,6 +84,8 @@ The new `struct_editor.py` provides:
 - **Real-time preview**: See converted output as you type
 - **File operations**: Save, open, new file with keyboard shortcuts
 - **Error prevention**: Visual feedback prevents syntax errors
+
+---
 
 ## Legacy Format (tyrec.py)
 

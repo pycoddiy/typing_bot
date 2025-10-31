@@ -1,5 +1,0 @@
-<CODE: PYTHON>
-    {{PRINT_DEBUG}}
-    
-    {{TRY_EXCEPT}}
-</CODE>

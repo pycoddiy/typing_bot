@@ -1,8 +1,8 @@
-import random
-import time
-import os
 import argparse
+import os
+import random
 import threading
+import time
 
 # Optional: For window focus checking (pygetwindow)
 try:
@@ -14,25 +14,26 @@ except Exception:
 # module can be imported and exercised in CI/dev without GUI access.
 try:
     from pynput.keyboard import Controller, Key, Listener
+
     PYNPUT_AVAILABLE = True
 except Exception:
     PYNPUT_AVAILABLE = False
 
     class Key:
-        enter = 'enter'
-        backspace = 'backspace'
-        space = 'space'
-        up = 'up'
-        down = 'down'
-        left = 'left'
-        right = 'right'
-        ctrl = 'ctrl'
-        shift = 'shift'
-        end = 'end'
-        home = 'home'
-        page_up = 'page_up'
-        page_down = 'page_down'
-        esc = 'esc'
+        enter = "enter"
+        backspace = "backspace"
+        space = "space"
+        up = "up"
+        down = "down"
+        left = "left"
+        right = "right"
+        ctrl = "ctrl"
+        shift = "shift"
+        end = "end"
+        home = "home"
+        page_up = "page_up"
+        page_down = "page_down"
+        esc = "esc"
 
     class Controller:
         def press(self, k):
@@ -64,8 +65,10 @@ except Exception:
         def pressed(self, key):
             return Controller._PressedContext(self, key)
 
+
 # Event set when live input recording is active (Pause/Break toggles it)
 LIVE_INPUT_MODE = threading.Event()
+
 
 def start_pause_listener():
     """Start a background listener that toggles LIVE_INPUT_MODE when Pause/Break is pressed.
@@ -84,7 +87,9 @@ def start_pause_listener():
                     print("[tyrec] Pause pressed: resuming file processing...")
                 else:
                     LIVE_INPUT_MODE.set()
-                    print("[tyrec] Pause pressed: pausing file processing. Recording live keyboard input. Press Pause again to resume.")
+                    print(
+                        "[tyrec] Pause pressed: pausing file processing. Recording live keyboard input. Press Pause again to resume."
+                    )
         except Exception:
             pass
 
@@ -95,7 +100,7 @@ def start_pause_listener():
 
 
 # For testing purposes, set this to True to disable delays
-NO_DELAY = False # Set to True to disable all delays for testing
+NO_DELAY = False  # Set to True to disable all delays for testing
 
 # Delays
 NORMAL_DELAY = 0.08
@@ -117,10 +122,10 @@ def read_code_to_type(filename="code_to_type.txt"):
     with open(filename, "r", encoding="utf-8") as f:
         raw = f.read()
         # Interpret backslash escapes (e.g., \n, \b, etc.)
-        return raw.encode('utf-8').decode('unicode_escape')
+        return raw.encode("utf-8").decode("unicode_escape")
 
 
-def generate_random_delay(average_delay = NORMAL_DELAY):
+def generate_random_delay(average_delay=NORMAL_DELAY):
     # Delays can be faster for consecutive letters and slower for punctuation
     # or before starting a new word.
     if NO_DELAY:
@@ -135,42 +140,55 @@ def simulate_typing(text):
 
     def handle_arrow_command(char):
         arrow_actions = {
-            'u': lambda: (keyboard.press(Key.up), keyboard.release(Key.up)),
-            'd': lambda: (keyboard.press(Key.down), keyboard.release(Key.down)),
-            'l': lambda: (keyboard.press(Key.left), keyboard.release(Key.left)),
-            'r': lambda: (keyboard.press(Key.right), keyboard.release(Key.right)),
-            's': lambda: keyboard.press(Key.shift),
-            'S': lambda: keyboard.release(Key.shift),
-            'e': lambda: (keyboard.press(Key.end), keyboard.release(Key.end)),
-            'b': lambda: (keyboard.press(Key.home), keyboard.release(Key.home)),
-            'E': lambda: (keyboard.press(Key.ctrl), keyboard.press(Key.end), keyboard.release(Key.end), keyboard.release(Key.ctrl)),
-            'B': lambda: (keyboard.press(Key.ctrl), keyboard.press(Key.home), keyboard.release(Key.home), keyboard.release(Key.ctrl)),
-            'U': lambda: (keyboard.press(Key.page_up), keyboard.release(Key.page_up)),
-            'D': lambda: (keyboard.press(Key.page_down), keyboard.release(Key.page_down)),
-            'C': lambda: (keyboard.press(Key.esc), keyboard.release(Key.esc)),
-            'z': lambda: time.sleep(5),
+            "u": lambda: (keyboard.press(Key.up), keyboard.release(Key.up)),
+            "d": lambda: (keyboard.press(Key.down), keyboard.release(Key.down)),
+            "l": lambda: (keyboard.press(Key.left), keyboard.release(Key.left)),
+            "r": lambda: (keyboard.press(Key.right), keyboard.release(Key.right)),
+            "s": lambda: keyboard.press(Key.shift),
+            "S": lambda: keyboard.release(Key.shift),
+            "e": lambda: (keyboard.press(Key.end), keyboard.release(Key.end)),
+            "b": lambda: (keyboard.press(Key.home), keyboard.release(Key.home)),
+            "E": lambda: (
+                keyboard.press(Key.ctrl),
+                keyboard.press(Key.end),
+                keyboard.release(Key.end),
+                keyboard.release(Key.ctrl),
+            ),
+            "B": lambda: (
+                keyboard.press(Key.ctrl),
+                keyboard.press(Key.home),
+                keyboard.release(Key.home),
+                keyboard.release(Key.ctrl),
+            ),
+            "U": lambda: (keyboard.press(Key.page_up), keyboard.release(Key.page_up)),
+            "D": lambda: (
+                keyboard.press(Key.page_down),
+                keyboard.release(Key.page_down),
+            ),
+            "C": lambda: (keyboard.press(Key.esc), keyboard.release(Key.esc)),
+            "z": lambda: time.sleep(5),
         }
-        if char == 'Q':
-            return 'exit'
+        if char == "Q":
+            return "exit"
         elif char in arrow_actions:
             arrow_actions[char]()
         else:
             raise ValueError(f"Unknown escape command: {char}")
 
     special_key_actions = {
-        '\n': lambda: (keyboard.press(Key.enter), keyboard.release(Key.enter)),
-        '\b': lambda: (keyboard.press(Key.backspace), keyboard.release(Key.backspace)),
-        ' ': lambda: (keyboard.press(Key.space), keyboard.release(Key.space)),
+        "\n": lambda: (keyboard.press(Key.enter), keyboard.release(Key.enter)),
+        "\b": lambda: (keyboard.press(Key.backspace), keyboard.release(Key.backspace)),
+        " ": lambda: (keyboard.press(Key.space), keyboard.release(Key.space)),
     }
 
     def get_delay(char):
-        if char == '\n':
+        if char == "\n":
             return generate_random_delay(NEWLINE_DELAY)
-        elif char == '\b':
+        elif char == "\b":
             return generate_random_delay(BACKSPACE_DELAY)
-        elif char == ' ':
+        elif char == " ":
             return generate_random_delay(SPACE_DELAY)
-        elif char == '\a':
+        elif char == "\a":
             return generate_random_delay(ARROWS_DELAY)
         elif char in '`~!@#$%^&*()_+{}|:"<>?':
             return generate_random_delay(SP_CHAR_DELAY)
@@ -206,7 +224,9 @@ def simulate_typing(text):
             if not PYNPUT_AVAILABLE:
                 print("Live input recording unavailable: pynput not installed.")
             else:
-                print("Recording live input — press Pause/Break to stop recording and resume file processing.")
+                print(
+                    "Recording live input — press Pause/Break to stop recording and resume file processing."
+                )
 
                 # Use a listener to record keys until LIVE_INPUT_MODE cleared
                 recorded = []
@@ -232,12 +252,12 @@ def simulate_typing(text):
 
         if arrows_flag:
             result = handle_arrow_command(char)
-            if result == 'exit':
+            if result == "exit":
                 arrows_flag = False
-            if char == 'z':
+            if char == "z":
                 continue
         else:
-            if char == '\a':
+            if char == "\a":
                 arrows_flag = True
             else:
                 handle_regular_char(char)
@@ -253,15 +273,15 @@ def is_target_window_focused(expected_title_substring):
     win = gw.getActiveWindow()
     if win and expected_title_substring.lower() in win.title.lower():
         return True
-    print(f"Active window is '{win.title if win else None}'. Waiting for '{expected_title_substring}' window...")
+    print(
+        f"Active window is '{win.title if win else None}'. Waiting for '{expected_title_substring}' window..."
+    )
     return False
 
 
 # Check if target window is focused before typing
 def main():
-    parser = argparse.ArgumentParser(
-        description="Typing recorder TyRec."
-    )
+    parser = argparse.ArgumentParser(description="Typing recorder TyRec.")
     parser.add_argument(
         "input_file",
         nargs="?",
@@ -300,7 +320,9 @@ def main():
 
     # Require an explicit input file to avoid accidental typing of a default file
     if args.input_file is None:
-        print("No input file provided. Please specify an input file to type (e.g. ./tyrec input.txt). Use --help for details.")
+        print(
+            "No input file provided. Please specify an input file to type (e.g. ./tyrec input.txt). Use --help for details."
+        )
         return
 
     # Read code from the requested input file

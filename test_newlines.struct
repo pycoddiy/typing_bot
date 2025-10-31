@@ -1,7 +1,0 @@
-<CODE: PYTHON>
-    {{IMPORT_NUMPY}}
-    {{IMPORT_MATPLOTLIB}}
-    
-    # Some code here
-    x = np.linspace(0, 10, 100)
-</CODE>

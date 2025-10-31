@@ -1,0 +1,45 @@
+<COMMANDS: VIM>
+    # Open vim and create a new file
+    INSERT_MODE
+</COMMANDS>
+
+<CODE>
+    #!/bin/bash
+    echo "Hello from vim!"
+    
+    # Add some more content
+    for i in {1..5}; do
+        echo "Line $i"
+    done
+</CODE>
+
+<COMMANDS: VIM>
+    # Switch to normal mode and save
+    NORMAL_MODE
+    SAVE
+    
+    # Navigate and edit
+    FILE_TOP
+    APPEND_MODE
+</COMMANDS>
+
+<CODE>
+    # This is a comment at the top
+</CODE>
+
+<COMMANDS: VIM>
+    NORMAL_MODE
+    LINE_END
+    ENTER
+</COMMANDS>
+
+<CODE>
+    
+    # Script created with vim automation
+</CODE>
+
+<COMMANDS: VIM>
+    # Save and exit
+    NORMAL_MODE
+    SAVE_QUIT
+</COMMANDS>

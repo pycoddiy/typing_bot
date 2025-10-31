@@ -1,7 +1,7 @@
 # Struct Editor Implementation Summary
 
 ## Overview
-Extended the typing bot application with a full-featured interactive editor for .struct files, providing visual editing with live preview capabilities.
+Extended the typing bot application with a full-featured interactive editor for .sxt files, providing visual editing with live preview capabilities.
 
 ## New Files Created
 
@@ -23,7 +23,7 @@ Extended the typing bot application with a full-featured interactive editor for 
 - Provides fallback options if curses isn't available
 - Error handling and user guidance
 
-### 4. `editor_example.struct` - Advanced Example
+### 4. `examples/editor_example.sxt` - Advanced Example
 - Showcases complex editing scenarios
 - Demonstrates tool-specific features
 - Shows mixed command types and navigation
@@ -32,14 +32,14 @@ Extended the typing bot application with a full-featured interactive editor for 
 
 ### Visual Interface
 ```
-┌─────────── Source (.struct) ──────────┬─── Preview (Legacy) ───┐
+┌─────────── Source (.sxt) ──────────┬─── Preview (Legacy) ───┐
 │  1 <CODE: PYTHON>                     │Preview (Legacy Format) │
 │  2     {{IMPORT_NUMPY}}               │                        │
 │  3     data = [1,2,3]                 │  1: import numpy as np │
 │ >4                                    │  2: data = [1,2,3]     │
 │  5 </CODE>                            │  3:                    │
 │                                       │                        │
-│ Status: file.struct* L4:C1            │ Shortcuts: Ctrl+S etc │
+│ Status: file.sxt* L4:C1            │ Shortcuts: Ctrl+S etc │
 └───────────────────────────────────────┴────────────────────────┘
 ```
 
@@ -82,7 +82,7 @@ Extended the typing bot application with a full-featured interactive editor for 
 ### Color System
 ```python
 curses.init_pair(1, curses.COLOR_GREEN, -1)    # Headers
-curses.init_pair(2, curses.COLOR_BLUE, -1)     # Keywords  
+curses.init_pair(2, curses.COLOR_BLUE, -1)     # Keywords
 curses.init_pair(3, curses.COLOR_YELLOW, -1)   # Comments
 curses.init_pair(4, curses.COLOR_RED, -1)      # Errors
 curses.init_pair(5, curses.COLOR_CYAN, -1)     # Tool specs
@@ -101,8 +101,8 @@ curses.init_pair(5, curses.COLOR_CYAN, -1)     # Tool specs
 # Start with new file
 python struct_editor.py
 
-# Edit existing file  
-python struct_editor.py example.struct
+# Edit existing file
+python struct_editor.py examples/example.sxt
 
 # Safe launcher
 python launch_editor.py
@@ -121,7 +121,7 @@ python launch_editor.py
 python editor_demo.py
 
 # Test complex example
-python struct_editor.py editor_example.struct
+python struct_editor.py examples/editor_example.sxt
 ```
 
 ## Benefits
@@ -144,11 +144,11 @@ python struct_editor.py editor_example.struct
 - **Uses existing parser**: No duplication of logic
 - **Works with all formats**: Legacy and structured files
 - **Tool-specific support**: All shortcuts and expansions work
-- **File format preservation**: Maintains `.struct` conventions
+- **File format preservation**: Maintains `.sxt` conventions
 
 ### Enhancement Path
 - Editor provides **creation and editing** capabilities
-- Structured capture provides **execution** capabilities  
+- Structured capture provides **execution** capabilities
 - Both work together for complete **authoring workflow**
 
 ## Future Enhancements Possible

@@ -7,14 +7,14 @@ by introducing <COMMANDS> and <CODE> sections, multi-line command formatting,
 and explicit ENTER command encoding.
 
 Usage:
-    python structured_capture.py input.struct --active_window_title "VS Code"
+    python structured_capture.py input.sxt --active_window_title "VS Code"
 """
 
-import re
 import argparse
-import tempfile
 import os
+import re
 import sys
+import tempfile
 from pathlib import Path
 
 # Add current directory to Python path to import tyrec.py
@@ -27,98 +27,98 @@ from tyrec import main as capture_main
 
 class StructuredParser:
     """Parser for structured typing bot files."""
-    
+
     def __init__(self):
         # Generic command mappings from readable names to capture.py format
         self.generic_commands = {
-            'ARROW_UP': '\au',
-            'ARROW_DOWN': '\ad', 
-            'ARROW_LEFT': '\al',
-            'ARROW_RIGHT': '\ar',
-            'SHIFT_PRESS': '\as',
-            'SHIFT_RELEASE': '\aS',
-            'END': '\ae',
-            'HOME': '\ab',
-            'CTRL_END': '\aE',
-            'CTRL_HOME': '\aB',
-            'PAGE_UP': '\aU',
-            'PAGE_DOWN': '\aD',
-            'ESCAPE': '\aC',
-            'BACKSPACE': '\b',
-            'ENTER': '\n',
-            'SLEEP': '\az',  # 5-second sleep
-            'EXIT_ARROW_MODE': '\aQ',
+            "ARROW_UP": "\au",
+            "ARROW_DOWN": "\ad",
+            "ARROW_LEFT": "\al",
+            "ARROW_RIGHT": "\ar",
+            "SHIFT_PRESS": "\as",
+            "SHIFT_RELEASE": "\aS",
+            "END": "\ae",
+            "HOME": "\ab",
+            "CTRL_END": "\aE",
+            "CTRL_HOME": "\aB",
+            "PAGE_UP": "\aU",
+            "PAGE_DOWN": "\aD",
+            "ESCAPE": "\aC",
+            "BACKSPACE": "\b",
+            "ENTER": "\n",
+            "SLEEP": "\az",  # 5-second sleep
+            "EXIT_ARROW_MODE": "\aQ",
         }
-        
+
         # Tool-specific command mappings
         self.tool_specific_commands = {
-            'VIM': {
+            "VIM": {
                 # Vim mode shortcuts
-                'NORMAL_MODE': '\aC',  # ESC to normal mode
-                'INSERT_MODE': 'i',
-                'APPEND_MODE': 'a',
-                'VISUAL_MODE': 'v',
-                'COMMAND_MODE': ':',
-                'SAVE': ':w\n',
-                'QUIT': ':q\n',
-                'SAVE_QUIT': ':wq\n',
-                'FORCE_QUIT': ':q!\n',
-                'DELETE_LINE': 'dd',
-                'YANK_LINE': 'yy',
-                'PASTE': 'p',
-                'UNDO': 'u',
-                'REDO': '\ar',  # Ctrl+R
-                'WORD_FORWARD': 'w',
-                'WORD_BACKWARD': 'b',
-                'LINE_END': '$',
-                'LINE_START': '0',
-                'FILE_TOP': 'gg',
-                'FILE_BOTTOM': 'G',
+                "NORMAL_MODE": "\aC",  # ESC to normal mode
+                "INSERT_MODE": "i",
+                "APPEND_MODE": "a",
+                "VISUAL_MODE": "v",
+                "COMMAND_MODE": ":",
+                "SAVE": ":w\n",
+                "QUIT": ":q\n",
+                "SAVE_QUIT": ":wq\n",
+                "FORCE_QUIT": ":q!\n",
+                "DELETE_LINE": "dd",
+                "YANK_LINE": "yy",
+                "PASTE": "p",
+                "UNDO": "u",
+                "REDO": "\ar",  # Ctrl+R
+                "WORD_FORWARD": "w",
+                "WORD_BACKWARD": "b",
+                "LINE_END": "$",
+                "LINE_START": "0",
+                "FILE_TOP": "gg",
+                "FILE_BOTTOM": "G",
             },
-            'SHELL': {
+            "SHELL": {
                 # Shell/terminal shortcuts
-                'CLEAR': 'clear\n',
-                'CTRL_C': '\a',  # Will be handled specially
-                'CTRL_D': '\a',  # Will be handled specially
-                'TAB_COMPLETE': '\t',
-                'HISTORY_UP': '\au',
-                'HISTORY_DOWN': '\ad',
-                'MOVE_TO_START': '\ab',  # Ctrl+A
-                'MOVE_TO_END': '\ae',    # Ctrl+E
-                'DELETE_WORD': '\a',     # Will be handled specially
-                'KILL_LINE': '\a',       # Will be handled specially
+                "CLEAR": "clear\n",
+                "CTRL_C": "\a",  # Will be handled specially
+                "CTRL_D": "\a",  # Will be handled specially
+                "TAB_COMPLETE": "\t",
+                "HISTORY_UP": "\au",
+                "HISTORY_DOWN": "\ad",
+                "MOVE_TO_START": "\ab",  # Ctrl+A
+                "MOVE_TO_END": "\ae",  # Ctrl+E
+                "DELETE_WORD": "\a",  # Will be handled specially
+                "KILL_LINE": "\a",  # Will be handled specially
             },
-            'VSCODE': {
+            "VSCODE": {
                 # VS Code shortcuts
-                'SAVE': '\as',           # Ctrl+S (will be handled specially)
-                'COPY': '\ac',           # Ctrl+C (will be handled specially)
-                'PASTE': '\av',          # Ctrl+V (will be handled specially)
-                'UNDO': '\az',           # Ctrl+Z (will be handled specially)
-                'REDO': '\ay',           # Ctrl+Y (will be handled specially)
-                'FIND': '\af',           # Ctrl+F (will be handled specially)
-                'COMMENT': '\a/',        # Ctrl+/ (will be handled specially)
-                'FORMAT': '\aS\af',      # Ctrl+Shift+F (will be handled specially)
-                'COMMAND_PALETTE': '\aS\ap',  # Ctrl+Shift+P (will be handled specially)
+                "SAVE": "\as",  # Ctrl+S (will be handled specially)
+                "COPY": "\ac",  # Ctrl+C (will be handled specially)
+                "PASTE": "\av",  # Ctrl+V (will be handled specially)
+                "UNDO": "\az",  # Ctrl+Z (will be handled specially)
+                "REDO": "\ay",  # Ctrl+Y (will be handled specially)
+                "FIND": "\af",  # Ctrl+F (will be handled specially)
+                "COMMENT": "\a/",  # Ctrl+/ (will be handled specially)
+                "FORMAT": "\aS\af",  # Ctrl+Shift+F (will be handled specially)
+                "COMMAND_PALETTE": "\aS\ap",  # Ctrl+Shift+P (will be handled specially)
             },
-            'PYTHON': {
+            "PYTHON": {
                 # Python-specific shortcuts (these expand to actual code)
-                'IMPORT_NUMPY': 'import numpy as np',
-                'IMPORT_PANDAS': 'import pandas as pd',
-                'IMPORT_MATPLOTLIB': 'import matplotlib.pyplot as plt',
-                'PRINT_DEBUG': 'print(f"DEBUG: {}")',  # positions cursor at end of line
-                'IF_NAME_MAIN': 'if __name__ == "__main__":',
-                'TRY_EXCEPT': 'try:\n\nexcept Exception as e:\n    print(f"Error: {e}")\au\au\ae',
-            }
+                "IMPORT_NUMPY": "import numpy as np",
+                "IMPORT_PANDAS": "import pandas as pd",
+                "IMPORT_MATPLOTLIB": "import matplotlib.pyplot as plt",
+                "PRINT_DEBUG": 'print(f"DEBUG: {}")',  # positions cursor at end of line
+                "IF_NAME_MAIN": 'if __name__ == "__main__":',
+                "TRY_EXCEPT": 'try:\n\nexcept Exception as e:\n    print(f"Error: {e}")\au\au\ae',
+            },
         }
-        
+
     def parse_structured_file(self, filepath: str) -> str:
         """Parse a structured file and convert it to capture.py format."""
-        with open(filepath, 'r', encoding='utf-8') as f:
+        with open(filepath, "r", encoding="utf-8") as f:
             content = f.read()
-            
+
         # Split content into sections
         sections = self._split_into_sections(content)
-        
+
         result = []
         for section_data in sections:
             if len(section_data) == 3:
@@ -127,107 +127,124 @@ class StructuredParser:
                 # Legacy format compatibility
                 section_type, section_content = section_data
                 tool_specifier = None
-                
-            if section_type == 'CODE':
-                result.append(self._process_code_section(section_content, tool_specifier))
-            elif section_type == 'COMMANDS':
-                result.append(self._process_commands_section(section_content, tool_specifier))
+
+            if section_type == "CODE":
+                result.append(
+                    self._process_code_section(section_content, tool_specifier)
+                )
+            elif section_type == "COMMANDS":
+                result.append(
+                    self._process_commands_section(section_content, tool_specifier)
+                )
             else:
                 # Plain text outside sections - treat as code
                 result.append(section_content)
-                
-        return ''.join(result)
-    
+
+        return "".join(result)
+
     def _split_into_sections(self, content: str) -> list:
         """Split content into alternating CODE and COMMANDS sections."""
         sections = []
-        
+
         # Pattern to match section headers with optional tool specifier
         # Matches: <CODE>, <CODE: PYTHON>, <COMMANDS>, <COMMANDS: VIM>, etc.
-        section_pattern = r'<(CODE|COMMANDS)(?:\s*:\s*([A-Z]+))?\s*>\s*\n(.*?)\n\s*</\1(?:\s*:\s*[A-Z]+)?>'
-        
+        section_pattern = r"<(CODE|COMMANDS)(?:\s*:\s*([A-Z]+))?\s*>\s*\n(.*?)\n\s*</\1(?:\s*:\s*[A-Z]+)?>"
+
         last_end = 0
         for match in re.finditer(section_pattern, content, re.DOTALL | re.IGNORECASE):
             # Add any content before this section as plain text
-            before = content[last_end:match.start()].strip()
+            before = content[last_end : match.start()].strip()
             if before:
-                sections.append(('TEXT', before, None))
-            
+                sections.append(("TEXT", before, None))
+
             section_type = match.group(1).upper()
             tool_specifier = match.group(2).upper() if match.group(2) else None
             section_content = match.group(3)
             sections.append((section_type, section_content, tool_specifier))
-            
+
             last_end = match.end()
-        
+
         # Add any remaining content as plain text
         after = content[last_end:].strip()
         if after:
-            sections.append(('TEXT', after, None))
-            
+            sections.append(("TEXT", after, None))
+
         return sections
-    
+
     def _process_code_section(self, content: str, tool_specifier: str = None) -> str:
         """Process a CODE section - return content as-is but handle newlines properly."""
         # Strip common indentation from the content
-        lines = content.split('\n')
+        lines = content.split("\n")
         # Remove empty lines at the beginning and end for indentation calculation
         non_empty_lines = [line for line in lines if line.strip()]
         if not non_empty_lines:
             return content
-        
+
         # Find the minimum indentation level
-        min_indent = min(len(line) - len(line.lstrip()) 
-                        for line in non_empty_lines if line.strip())
-        
+        min_indent = min(
+            len(line) - len(line.lstrip()) for line in non_empty_lines if line.strip()
+        )
+
         # Remove the common indentation from all lines
         dedented_lines = []
         for line in lines:
             if line.strip():  # Non-empty line
-                dedented_lines.append(line[min_indent:] if len(line) >= min_indent else line)
+                dedented_lines.append(
+                    line[min_indent:] if len(line) >= min_indent else line
+                )
             else:  # Empty line
-                dedented_lines.append('')
-        
-        processed_content = '\n'.join(dedented_lines)
-        
+                dedented_lines.append("")
+
+        processed_content = "\n".join(dedented_lines)
+
         # Apply tool-specific expansions if specified
         if tool_specifier and tool_specifier in self.tool_specific_commands:
-            processed_content = self._expand_tool_shortcuts(processed_content, tool_specifier)
-        
+            processed_content = self._expand_tool_shortcuts(
+                processed_content, tool_specifier
+            )
+
         return processed_content
-    
+
     def _expand_tool_shortcuts(self, content: str, tool: str) -> str:
         """Expand tool-specific shortcuts in content."""
         if tool not in self.tool_specific_commands:
             return content
-            
+
         tool_commands = self.tool_specific_commands[tool]
-        
+
         # Replace shortcuts with their expanded forms
         # Use word boundaries to avoid partial matches
         for shortcut, expansion in tool_commands.items():
             # Look for {{SHORTCUT}} pattern for explicit expansion
-            pattern = r'\{\{' + re.escape(shortcut) + r'\}\}'
+            pattern = r"\{\{" + re.escape(shortcut) + r"\}\}"
             content = re.sub(pattern, expansion, content)
-            
+
         return content
-    
-    def _process_commands_section(self, content: str, tool_specifier: str = None) -> str:
+
+    def _process_commands_section(
+        self, content: str, tool_specifier: str = None
+    ) -> str:
         """Process a COMMANDS section and convert to capture.py escape sequences."""
         result = []
-        
+
         # Strip common indentation first
-        lines = content.strip().split('\n')
+        lines = content.strip().split("\n")
         if lines:
             # Find minimum indentation of non-empty, non-comment lines
-            non_empty_lines = [line for line in lines if line.strip() and not line.strip().startswith('#')]
+            non_empty_lines = [
+                line
+                for line in lines
+                if line.strip() and not line.strip().startswith("#")
+            ]
             if non_empty_lines:
-                min_indent = min(len(line) - len(line.lstrip()) for line in non_empty_lines)
+                min_indent = min(
+                    len(line) - len(line.lstrip()) for line in non_empty_lines
+                )
                 # Remove common indentation, but preserve structure for comments
                 dedented_lines = []
                 for line in lines:
                     if line.strip():  # Non-empty line
-                        if line.strip().startswith('#'):
+                        if line.strip().startswith("#"):
                             # For comments, just remove leading whitespace but preserve the comment
                             dedented_lines.append(line.strip())
                         elif len(line) >= min_indent:
@@ -238,31 +255,31 @@ class StructuredParser:
                             dedented_lines.append(line)
                     else:
                         # Empty line
-                        dedented_lines.append('')
+                        dedented_lines.append("")
                 lines = dedented_lines
-        
+
         # Get the appropriate command map
         command_map = self.generic_commands.copy()
         if tool_specifier and tool_specifier in self.tool_specific_commands:
             command_map.update(self.tool_specific_commands[tool_specifier])
-        
+
         # Parse commands line by line
         for line in lines:
             line = line.strip()
-            if not line or line.startswith('#'):
+            if not line or line.startswith("#"):
                 continue
-            
+
             # First, expand short command syntax like <u5>, <l3>, etc.
             line = self._expand_short_commands(line)
-                
+
             # Parse command with optional count
             parts = line.split()
             if not parts:
                 continue
-                
+
             command = parts[0].upper()
             count = 1
-            
+
             # Check if there's a count specified
             if len(parts) > 1:
                 try:
@@ -271,58 +288,68 @@ class StructuredParser:
                     # If second part is not a number, treat the whole line as invalid command
                     print(f"Warning: Invalid command format '{line}', skipping")
                     continue
-            
+
             # Convert command to escape sequence
             if command in command_map:
                 escape_seq = command_map[command]
-                
+
                 # Special handling for certain commands
-                if command in ['ARROW_UP', 'ARROW_DOWN', 'ARROW_LEFT', 'ARROW_RIGHT', 
-                              'BACKSPACE', 'ENTER']:
+                if command in [
+                    "ARROW_UP",
+                    "ARROW_DOWN",
+                    "ARROW_LEFT",
+                    "ARROW_RIGHT",
+                    "BACKSPACE",
+                    "ENTER",
+                ]:
                     # These commands can be repeated
                     result.append(escape_seq * count)
-                elif command == 'SLEEP':
+                elif command == "SLEEP":
                     # Sleep command - repeat the sequence
                     result.append(escape_seq * count)
                 else:
                     # Other commands don't repeat, but may be tool-specific expansions
                     if count > 1:
-                        print(f"Warning: Command '{command}' doesn't support repetition, ignoring count")
+                        print(
+                            f"Warning: Command '{command}' doesn't support repetition, ignoring count"
+                        )
                     result.append(escape_seq)
             else:
-                print(f"Warning: Unknown command '{command}' in line '{line}', skipping")
-                
-        return ''.join(result)
-    
+                print(
+                    f"Warning: Unknown command '{command}' in line '{line}', skipping"
+                )
+
+        return "".join(result)
+
     def _expand_short_commands(self, line: str) -> str:
         """Expand short command syntax like <u5>, <l3> into full commands."""
         import re
-        
+
         # Define the short command mappings
         short_to_long = {
-            'u': 'ARROW_UP',
-            'd': 'ARROW_DOWN', 
-            'l': 'ARROW_LEFT',
-            'r': 'ARROW_RIGHT',
-            'b': 'BACKSPACE',
-            'e': 'ENTER',
-            's': 'SLEEP',
-            'h': 'HOME',
-            'E': 'END'  # Capital E for END to distinguish from 'e' (ENTER)
+            "u": "ARROW_UP",
+            "d": "ARROW_DOWN",
+            "l": "ARROW_LEFT",
+            "r": "ARROW_RIGHT",
+            "b": "BACKSPACE",
+            "e": "ENTER",
+            "s": "SLEEP",
+            "h": "HOME",
+            "E": "END",  # Capital E for END to distinguish from 'e' (ENTER)
         }
-        
+
         # Pattern to match short commands: <letter><optional_number>
         # Examples: <u>, <u5>, <l3>, <d10>, <E> (END), <h> (HOME)
-        pattern = r'<([udlrbsehE])(\d*)>'
-        
+        pattern = r"<([udlrbsehE])(\d*)>"
+
         def replace_match(match):
             command_char = match.group(1)
             count_str = match.group(2)
-            
+
             if command_char in short_to_long:
                 full_command = short_to_long[command_char]
                 count = int(count_str) if count_str else 1
-                
+
                 if count == 1:
                     return full_command
                 else:
@@ -330,7 +357,7 @@ class StructuredParser:
             else:
                 # Unknown command character, return as-is
                 return match.group(0)
-        
+
         # Replace all short commands in the line
         expanded_line = re.sub(pattern, replace_match, line, flags=re.IGNORECASE)
         return expanded_line
@@ -340,14 +367,16 @@ def convert_structured_to_legacy(input_file: str, output_file: str = None) -> st
     """Convert a structured file to legacy capture.py format."""
     parser = StructuredParser()
     converted_content = parser.parse_structured_file(input_file)
-    
+
     if output_file:
-        with open(output_file, 'w', encoding='utf-8') as f:
+        with open(output_file, "w", encoding="utf-8") as f:
             f.write(converted_content)
         return output_file
     else:
         # Create a temporary file
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False, encoding='utf-8') as f:
+        with tempfile.NamedTemporaryFile(
+            mode="w", suffix=".txt", delete=False, encoding="utf-8"
+        ) as f:
             f.write(converted_content)
             return f.name
 
@@ -359,12 +388,12 @@ def main():
     )
     parser.add_argument(
         "input_file",
-        help="Path to the structured input file (.struct or .txt)",
+        help="Path to the structured input file (.sxt or .txt)",
     )
     parser.add_argument(
         "--active_window_title",
         "-t",
-        dest="active_window_title", 
+        dest="active_window_title",
         default="PowerShell",
         help="Expected window title substring to wait for before typing (default: PowerShell)",
     )
@@ -383,14 +412,14 @@ def main():
         action="store_true",
         help="Preview the converted content without running",
     )
-    
+
     args = parser.parse_args()
-    
+
     # Check if input file exists
     if not os.path.exists(args.input_file):
         print(f"Error: Input file '{args.input_file}' not found.")
         return 1
-    
+
     try:
         # Convert structured file to legacy format
         if args.output:
@@ -410,38 +439,39 @@ def main():
         else:
             # Create temporary file and run capture.py
             legacy_file = convert_structured_to_legacy(args.input_file)
-            
+
             try:
                 # Prepare arguments for capture.py
                 capture_args = [
                     legacy_file,
-                    "--active_window_title", args.active_window_title,
+                    "--active_window_title",
+                    args.active_window_title,
                 ]
-                
+
                 if args.no_delay:
                     capture_args.append("--no-delay")
-                
+
                 # Temporarily modify sys.argv to pass arguments to capture.py
                 original_argv = sys.argv[:]
                 sys.argv = ["capture.py"] + capture_args
-                
+
                 # Run capture.py
                 capture_main()
-                
+
                 # Restore original argv
                 sys.argv = original_argv
-                
+
             finally:
                 # Clean up temporary file
                 try:
                     os.unlink(legacy_file)
                 except OSError:
                     pass
-            
+
     except Exception as e:
         print(f"Error: {e}")
         return 1
-    
+
     return 0
 
 

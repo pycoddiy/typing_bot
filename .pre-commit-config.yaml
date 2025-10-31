@@ -1,0 +1,85 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      # Git
+      - id: check-added-large-files
+      # - id: no-commit-to-branch
+      #   name: "ensure no direct commit to main branch"
+      #   args: [--branch, "main"]
+      - id: check-case-conflict
+
+      # Contents
+      - id: mixed-line-ending
+      - id: fix-byte-order-marker
+      - id: check-yaml
+      - id: check-toml
+      - id: check-json
+        exclude: '\.vscode/.*\.json$'  # Exclude VS Code config files which may have comments
+
+      # Python
+      - id: check-ast
+      - id: check-builtin-literals
+      - id: check-docstring-first
+      - id: debug-statements
+
+      # General
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+        exclude: '\.sxt$'  # Exclude .sxt files which have specific formatting
+      - id: check-merge-conflict
+
+  - repo: https://github.com/psf/black
+    rev: 24.10.0
+    hooks:
+      - id: black
+        language_version: python3
+
+  - repo: https://github.com/pycqa/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        args: ["--profile", "black", "--filter-files"]
+
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.1.1
+    hooks:
+      - id: flake8
+        args: [
+          "--max-line-length=88",
+          "--select=E,W,F",
+          "--ignore=E203,E501,W503,E402,F401,F841",  # Relaxed for demo code
+          "--exclude=tests/*,test_*.py,*_test.py,examples/*"  # Exclude test files
+        ]
+
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.3.0
+    hooks:
+      - id: codespell
+        args: [
+          "--ignore-words-list=te,nd,ans,hist,wrold,resul",
+          "--skip=*.lock,*.json,*.sxt,uv.lock,*.txt"
+        ]
+
+  - repo: https://github.com/pre-commit/pygrep-hooks
+    rev: v1.10.0
+    hooks:
+      - id: python-check-blanket-noqa
+        exclude: 'test_.*\.py$'
+      - id: python-no-eval
+      - id: python-no-log-warn
+
+# CI configs
+ci:
+  autofix_commit_msg: |
+      [pre-commit.ci] auto fixes from pre-commit.com hooks
+
+      for more information, see https://pre-commit.ci
+  autofix_prs: true
+  autoupdate_branch: ''
+  autoupdate_commit_msg: '[pre-commit.ci] pre-commit autoupdate'
+  autoupdate_schedule: weekly
+  skip: []
+  submodules: false

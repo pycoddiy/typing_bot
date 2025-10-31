@@ -12,7 +12,7 @@ Enhanced the raw editor (left pane) with context-aware Python syntax highlightin
   - Strings and numbers
   - Operators and punctuation
   - Comments
-  
+
 - **Commands Sections**: Basic highlighting for:
   - Section headers
   - Command keywords
@@ -54,4 +54,4 @@ The enhancement is automatic - no user interaction required. The raw editor will
 4. **Better Development Experience**: Syntax errors and structure more visible
 
 ## Testing
-Use the test file created by `test_syntax_highlighting.py` or any existing `.struct` file to see the enhanced highlighting in action.
+Use the test file created by `test_syntax_highlighting.py` or any existing `.sxt` file to see the enhanced highlighting in action.

@@ -1,0 +1,93 @@
+# VIM-Style Editor Example
+# 
+# This demonstrates using VIM navigation commands in the structured format:
+# - WORD_BACKWARD: VIM 'b' command for word navigation
+# - FILE_BOTTOM: VIM 'G' command to go to end of file  
+# - LINE_END: VIM '$' command to go to end of line
+# - Mixed with standard commands and short syntax where appropriate
+#
+# Compare with examples/editor_example.sxt to see VS Code vs VIM approaches
+
+<CODE: PYTHON>
+    # Interactive editor demo - VIM style navigation
+    {{IMPORT_NUMPY}}
+    {{IMPORT_MATPLOTLIB}}
+    
+    # Generate sample data
+    x = np.linspace(0, 2*np.pi, 100)
+    y1 = np.sin(x)
+    y2 = np.cos(x)
+    
+    # Create the plot
+    plt.figure(figsize=(10, 6))
+    plt.plot(x, y1, 'b-', label='sin(x)', linewidth=2)
+    plt.plot(x, y2, 'r--', label='cos(x)', linewidth=2)
+    plt.title('Trigonometric Functions')
+    plt.xlabel('x')
+    plt.ylabel('y')
+    plt.legend()
+    plt.grid(True, alpha=0.3)
+    plt.show()
+    
+    {{IF_NAME_MAIN}}
+        {{PRINT_DEBUG}}
+</CODE>
+
+<COMMANDS: VIM>
+    # Use VIM word movements to navigate to debug placeholder
+    WORD_BACKWARD
+    WORD_BACKWARD
+    WORD_BACKWARD
+</COMMANDS>
+
+<CODE>
+    x.shape, y1.shape
+</CODE>
+
+<COMMANDS: VIM>
+    # Use VIM navigation - go to end of file
+    FILE_BOTTOM
+    LINE_END
+</COMMANDS>
+
+<COMMANDS>
+    # Add spacing for new section
+    <e2>
+</COMMANDS>
+
+<CODE>
+    # Additional analysis
+</CODE>
+
+<COMMANDS>
+    # Standard navigation for try-except placement
+    <e>
+</COMMANDS>
+
+<CODE: PYTHON>
+    {{TRY_EXCEPT}}
+        stats = {
+            'x_range': (x.min(), x.max()),
+            'y1_range': (y1.min(), y1.max()),
+            'y2_range': (y2.min(), y2.max())
+        }
+        print(f"Statistics: {stats}")
+</CODE>
+
+<COMMANDS: VIM>
+    # VIM navigation to position in try block
+    ARROW_UP
+    ARROW_UP
+    LINE_END
+</COMMANDS>
+
+<COMMANDS>
+    # Insert debug info
+    <e>
+</COMMANDS>
+
+<CODE>
+        
+        # Debug information - added with VIM navigation
+        print(f"Data shapes: x={x.shape}, y1={y1.shape}, y2={y2.shape}")
+</CODE>

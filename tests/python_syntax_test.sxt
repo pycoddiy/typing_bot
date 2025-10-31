@@ -1,0 +1,10 @@
+<CODE: PYTHON>
+    import numpy as np
+    
+    def test_function():
+        x = 42
+        return x * 2
+    
+    # This is a comment
+    result = "hello world"
+</CODE>

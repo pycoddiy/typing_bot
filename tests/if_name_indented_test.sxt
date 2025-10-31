@@ -1,0 +1,5 @@
+<CODE: PYTHON>
+    {{IF_NAME_MAIN}}
+        data = [1, 2, 3]
+        {{PRINT_DEBUG}}
+</CODE>
