@@ -3,25 +3,26 @@ name = "typing-bot"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.9"
 dependencies = [
-    "mock>=5.2.0",
     "pygetwindow>=0.0.9",
     "pynput>=1.8.1",
-    "pytest>=8.4.2",
 ]
 
 [project.optional-dependencies]
 dev = [
+    "pytest>=8.4.2",
     "pre-commit>=4.0.0",
     "black>=24.0.0",
     "isort>=5.12.0",
     "flake8>=7.0.0",
     "mypy>=1.8.0",
+    "coverage>=7.0.0",
+    "bandit>=1.7.0",
 ]
 
 [project.scripts]
-tyrec = "capture:main"
+tyrec = "typing_bot.tyrec:main"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -41,12 +42,23 @@ markers = [
 ]
 
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling>=1.21.0"]
 build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["typing_bot"]
+
+[tool.hatch.build.targets.sdist]
+exclude = [
+  "/.github",
+  "/.vscode",
+  "/tests",
+  "*.egg-info",
+]
 
 [tool.black]
 line-length = 88
-target-version = ['py313']
+target-version = ['py39', 'py310', 'py311', 'py312']
 include = '\.pyi?$'
 extend-exclude = '''
 /(
@@ -69,7 +81,7 @@ line_length = 88
 known_first_party = ["typing_bot", "structured_capture", "struct_editor"]
 
 [tool.mypy]
-python_version = "3.13"
+python_version = "3.9"
 warn_return_any = false
 warn_unused_configs = true
 disallow_untyped_defs = false
@@ -83,7 +95,43 @@ warn_no_return = false
 warn_unreachable = false
 strict_equality = false
 ignore_missing_imports = true
+explicit_package_bases = true
+namespace_packages = true
+exclude = [
+    '^tests/',
+    '^examples/',
+    '^scripts/',
+    '^\.venv/',
+    '^build/',
+    '^dist/',
+]
 
 [tool.bandit]
 exclude_dirs = ["tests", "test", ".venv", "venv"]
 skips = ["B101", "B601", "B110", "B311"]
+
+[tool.coverage.run]
+source = ["."]
+omit = [
+    "tests/*",
+    "*/tests/*",
+    "*/test_*",
+    "*/__pycache__/*",
+    "*/venv/*",
+    "*/.venv/*",
+    "setup.py",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == \\\"__main__\\\":",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]

@@ -16,12 +16,12 @@ import re
 import sys
 import tempfile
 from pathlib import Path
+from typing import List, Optional, Tuple
 
-# Add current directory to Python path to import tyrec.py
+# Import the capture function, ensuring current directory is in sys.path
 current_dir = os.path.dirname(os.path.abspath(__file__))
 if current_dir not in sys.path:
     sys.path.insert(0, current_dir)
-
 from tyrec import main as capture_main
 
 
@@ -142,9 +142,11 @@ class StructuredParser:
 
         return "".join(result)
 
-    def _split_into_sections(self, content: str) -> list:
+    def _split_into_sections(
+        self, content: str
+    ) -> List[Tuple[str, str, Optional[str]]]:
         """Split content into alternating CODE and COMMANDS sections."""
-        sections = []
+        sections: List[Tuple[str, str, Optional[str]]] = []
 
         # Pattern to match section headers with optional tool specifier
         # Matches: <CODE>, <CODE: PYTHON>, <COMMANDS>, <COMMANDS: VIM>, etc.

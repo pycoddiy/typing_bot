@@ -1,14 +1,14 @@
 <CODE: PYTHON>
     import numpy as np
     import matplotlib.pyplot as plt
-    
+
     def calculate(x, y):
         return x + y
-    
+
     # This is a comment
     result = calculate(10, 20)
     print(f"Result: {result}")
-    
+
     for i in range(5):
         print(i)
 </CODE>
