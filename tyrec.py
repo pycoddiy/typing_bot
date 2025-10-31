@@ -3,6 +3,7 @@ import os
 import random
 import threading
 import time
+from typing import Any, Optional, Union
 
 # Optional: For window focus checking (pygetwindow)
 try:
@@ -13,13 +14,17 @@ except Exception:
 # Try to import real pynput; if it's not available provide dry-run dummies so the
 # module can be imported and exercised in CI/dev without GUI access.
 try:
-    from pynput.keyboard import Controller, Key, Listener
+    from pynput.keyboard import Controller as PynputController
+    from pynput.keyboard import Key as PynputKey
+    from pynput.keyboard import Listener
 
     PYNPUT_AVAILABLE = True
+    Key = PynputKey
+    Controller = PynputController
 except Exception:
     PYNPUT_AVAILABLE = False
 
-    class Key:
+    class Key:  # type: ignore[no-redef]
         enter = "enter"
         backspace = "backspace"
         space = "space"
@@ -35,34 +40,34 @@ except Exception:
         page_down = "page_down"
         esc = "esc"
 
-    class Controller:
-        def press(self, k):
+    class Controller:  # type: ignore[no-redef]
+        def press(self, k: Any) -> None:
             print(f"[dry-run] press: {k}")
 
-        def release(self, k):
+        def release(self, k: Any) -> None:
             print(f"[dry-run] release: {k}")
 
-        def __enter__(self):
+        def __enter__(self) -> "Controller":
             return self
 
-        def __exit__(self, exc_type, exc, tb):
+        def __exit__(self, exc_type: Any, exc: Any, tb: Any) -> bool:
             return False
 
         # Provide a context manager compatible with pynput's Controller.pressed(key)
         class _PressedContext:
-            def __init__(self, controller, key):
+            def __init__(self, controller: "Controller", key: Any) -> None:
                 self._controller = controller
                 self._key = key
 
-            def __enter__(self):
+            def __enter__(self) -> None:
                 self._controller.press(self._key)
                 return None
 
-            def __exit__(self, exc_type, exc, tb):
+            def __exit__(self, exc_type: Any, exc: Any, tb: Any) -> bool:
                 self._controller.release(self._key)
                 return False
 
-        def pressed(self, key):
+        def pressed(self, key: Any) -> "_PressedContext":
             return Controller._PressedContext(self, key)
 
 

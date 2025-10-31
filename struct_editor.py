@@ -209,7 +209,7 @@ class StructEditor:
                 i += 1
 
                 # Process content within the section
-                section_content_lines = []
+                section_content_lines: List[str] = []
                 section_end_found = False
 
                 while i <= up_to_line and i < len(lines):

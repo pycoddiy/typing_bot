@@ -16,6 +16,7 @@ import re
 import sys
 import tempfile
 from pathlib import Path
+from typing import List, Optional, Tuple, Union
 
 # Import the capture function with fallback for different import contexts
 try:
@@ -145,9 +146,11 @@ class StructuredParser:
 
         return "".join(result)
 
-    def _split_into_sections(self, content: str) -> list:
+    def _split_into_sections(
+        self, content: str
+    ) -> List[Tuple[str, str, Optional[str]]]:
         """Split content into alternating CODE and COMMANDS sections."""
-        sections = []
+        sections: List[Tuple[str, str, Optional[str]]] = []
 
         # Pattern to match section headers with optional tool specifier
         # Matches: <CODE>, <CODE: PYTHON>, <COMMANDS>, <COMMANDS: VIM>, etc.
