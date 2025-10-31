@@ -3,7 +3,7 @@ import os
 import random
 import threading
 import time
-from typing import Any, Optional, Union
+from typing import Any
 
 # Optional: For window focus checking (pygetwindow)
 try:
