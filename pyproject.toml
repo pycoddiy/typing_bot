@@ -23,7 +23,7 @@ dev = [
 ]
 
 [project.scripts]
-tyrec = "tyrec:main"
+tyrec = "typing_bot.tyrec:main"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
