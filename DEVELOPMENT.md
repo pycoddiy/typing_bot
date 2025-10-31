@@ -92,7 +92,7 @@ uv run pre-commit run --all-files
 uv run black .                    # Format code
 uv run isort .                    # Sort imports
 uv run flake8 .                   # Lint code
-uv run mypy tyrec.py             # Type check
+uv run mypy .                     # Type check
 uv run bandit -r .               # Security scan
 ```
 
@@ -106,7 +106,7 @@ pre-commit run --all-files
 black .                    # Format code
 isort .                    # Sort imports
 flake8 .                   # Lint code
-mypy tyrec.py             # Type check
+mypy .                     # Type check
 bandit -r .               # Security scan
 ```
 # Activate virtual environment (if not already active)
@@ -140,12 +140,15 @@ bandit -r .               # Security scan
 The project uses `.sxt` files for typing demonstrations:
 
 ```bash
-# Run examples
-python tyrec.py examples/example_python.sxt
-python tyrec.py examples/editor_example_vim.sxt
+# Run examples using the installed package entry point
+tyrec examples/example_python.sxt
+tyrec examples/editor_example_vim.sxt
+
+# Or run directly with Python
+python -m tyrec examples/example_python.sxt
 
 # Test script generation
-python tyrec.py scripts/code_to_type_test.sxt
+tyrec scripts/code_to_type_test.sxt
 ```
 
 ## GitHub Actions CI
@@ -167,7 +170,7 @@ source venv/bin/activate
 pre-commit run --all-files
 pytest -v --tb=short
 coverage run -m pytest
-mypy --ignore-missing-imports tyrec.py structured_capture.py struct_editor.py
+mypy .
 bandit -r .
 ```
 

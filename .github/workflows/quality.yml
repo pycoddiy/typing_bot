@@ -40,7 +40,7 @@ jobs:
 
     - name: Run type checking
       run: |
-        mypy --ignore-missing-imports tyrec.py structured_capture.py struct_editor.py || true
+        mypy --explicit-package-bases . || true
 
     - name: Security check with bandit
       run: |
