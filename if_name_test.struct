@@ -1,0 +1,4 @@
+<CODE: PYTHON>
+    {{IF_NAME_MAIN}}
+        {{PRINT_DEBUG}}
+</CODE>

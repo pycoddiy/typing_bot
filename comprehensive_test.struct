@@ -1,0 +1,12 @@
+<CODE: PYTHON>
+    {{IMPORT_NUMPY}}
+    {{IMPORT_MATPLOTLIB}}
+    {{IMPORT_PANDAS}}
+    
+    {{IF_NAME_MAIN}}
+        data = [1, 2, 3]
+        {{PRINT_DEBUG}}
+        
+        {{TRY_EXCEPT}}
+            result = np.mean(data)
+</CODE>

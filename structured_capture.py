@@ -102,12 +102,12 @@ class StructuredParser:
             },
             'PYTHON': {
                 # Python-specific shortcuts (these expand to actual code)
-                'IMPORT_NUMPY': 'import numpy as np\n',
-                'IMPORT_PANDAS': 'import pandas as pd\n',
-                'IMPORT_MATPLOTLIB': 'import matplotlib.pyplot as plt\n',
-                'PRINT_DEBUG': 'print(f"DEBUG: {}"))\alllll',  # positions cursor inside braces
-                'IF_NAME_MAIN': 'if __name__ == "__main__":\n    ',
-                'TRY_EXCEPT': 'try:\n    \nexcept Exception as e:\n    print(f"Error: {e}")\auuuu\ae',
+                'IMPORT_NUMPY': 'import numpy as np',
+                'IMPORT_PANDAS': 'import pandas as pd',
+                'IMPORT_MATPLOTLIB': 'import matplotlib.pyplot as plt',
+                'PRINT_DEBUG': 'print(f"DEBUG: {}")',  # positions cursor at end of line
+                'IF_NAME_MAIN': 'if __name__ == "__main__":',
+                'TRY_EXCEPT': 'try:\n\nexcept Exception as e:\n    print(f"Error: {e}")\au\au\ae',
             }
         }
         
@@ -251,6 +251,9 @@ class StructuredParser:
             line = line.strip()
             if not line or line.startswith('#'):
                 continue
+            
+            # First, expand short command syntax like <u5>, <l3>, etc.
+            line = self._expand_short_commands(line)
                 
             # Parse command with optional count
             parts = line.split()
@@ -290,6 +293,47 @@ class StructuredParser:
                 print(f"Warning: Unknown command '{command}' in line '{line}', skipping")
                 
         return ''.join(result)
+    
+    def _expand_short_commands(self, line: str) -> str:
+        """Expand short command syntax like <u5>, <l3> into full commands."""
+        import re
+        
+        # Define the short command mappings
+        short_to_long = {
+            'u': 'ARROW_UP',
+            'd': 'ARROW_DOWN', 
+            'l': 'ARROW_LEFT',
+            'r': 'ARROW_RIGHT',
+            'b': 'BACKSPACE',
+            'e': 'ENTER',
+            's': 'SLEEP',
+            'h': 'HOME',
+            'E': 'END'  # Capital E for END to distinguish from 'e' (ENTER)
+        }
+        
+        # Pattern to match short commands: <letter><optional_number>
+        # Examples: <u>, <u5>, <l3>, <d10>, <E> (END), <h> (HOME)
+        pattern = r'<([udlrbsehE])(\d*)>'
+        
+        def replace_match(match):
+            command_char = match.group(1)
+            count_str = match.group(2)
+            
+            if command_char in short_to_long:
+                full_command = short_to_long[command_char]
+                count = int(count_str) if count_str else 1
+                
+                if count == 1:
+                    return full_command
+                else:
+                    return f"{full_command} {count}"
+            else:
+                # Unknown command character, return as-is
+                return match.group(0)
+        
+        # Replace all short commands in the line
+        expanded_line = re.sub(pattern, replace_match, line, flags=re.IGNORECASE)
+        return expanded_line
 
 
 def convert_structured_to_legacy(input_file: str, output_file: str = None) -> str:

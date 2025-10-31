@@ -277,6 +277,30 @@ Use `{{SHORTCUT}}` syntax to expand common Python patterns:
 
 ## Usage
 
+### Interactive Editor
+
+Edit .struct files with live preview using the interactive editor:
+
+```bash
+# Launch editor with new file
+python struct_editor.py
+
+# Edit existing file
+python struct_editor.py example.struct
+
+# Or use the launcher (with error handling)
+python launch_editor.py
+```
+
+**Editor Features:**
+- **Split-pane interface**: Source code on left, final text preview on right
+- **Syntax highlighting**: Color-coded sections, commands, and comments
+- **Real-time preview**: See final text result as it would appear after execution
+- **Line-by-line simulation**: Preview shows execution results up to current editor line
+- **Cursor position indicator**: See exactly where the typing cursor would be (│)
+- **Standard editing**: Insert, delete, backspace, enter
+- **File operations**: Save (Ctrl+S), Open (Ctrl+O), New (Ctrl+N), Quit (Ctrl+Q)
+
 ### Command Line Interface
 
 Run a structured file:

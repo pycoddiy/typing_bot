@@ -2,6 +2,51 @@
 
 TyRec (tyrec.py) simulates typing from an input file and supports a small set of escape/command sequences, an "arrow mode", and live input recording via the Pause/Break key.
 
+## New: Structured Format & Interactive Editor
+
+**🎉 NEW FEATURES:**
+- **Structured Format**: Write readable `.struct` files instead of cryptic escape sequences
+- **Interactive Editor**: Visual editor with live preview and syntax highlighting
+- **Tool-Specific Commands**: Context-aware shortcuts for VIM, VS Code, Shell, and Python
+
+### Quick Start with Structured Format
+
+```bash
+# Use the interactive editor
+python struct_editor.py example.struct
+
+# Or convert and run structured files
+python structured_capture.py example.struct --preview
+python structured_capture.py example.struct --active_window_title "VS Code"
+```
+
+**Structured format example:**
+```
+<CODE: PYTHON>
+    {{IMPORT_NUMPY}}
+    data = np.array([1, 2, 3])
+    print(f"Mean: {np.mean(data)}")
+</CODE>
+
+<COMMANDS: VIM>
+    SAVE
+    NORMAL_MODE
+</COMMANDS>
+```
+
+See [STRUCTURED_FORMAT.md](STRUCTURED_FORMAT.md) for complete documentation.
+
+## Interactive Editor Features
+
+The new `struct_editor.py` provides:
+- **Split-pane interface**: Source on left, live preview on right
+- **Syntax highlighting**: Color-coded sections and commands
+- **Real-time preview**: See converted output as you type
+- **File operations**: Save, open, new file with keyboard shortcuts
+- **Error prevention**: Visual feedback prevents syntax errors
+
+## Legacy Format (tyrec.py)
+
 ## Key commands
 
 TyRec reads characters from an input file and turns them into simulated key events. The following special characters and escape sequences are recognised:
