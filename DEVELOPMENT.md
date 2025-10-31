@@ -109,31 +109,6 @@ flake8 .                   # Lint code
 mypy .                     # Type check
 bandit -r .               # Security scan
 ```
-# Activate virtual environment (if not already active)
-source venv/bin/activate
-
-# Run all tests
-pytest -v
-
-# Run tests with coverage
-coverage run -m pytest
-coverage report
-coverage html  # Creates htmlcov/ directory
-```
-
-### Code Quality Checks
-
-```bash
-# Run all pre-commit checks
-pre-commit run --all-files
-
-# Run individual tools
-black .                    # Format code
-isort .                    # Sort imports
-flake8 .                   # Lint code
-mypy tyrec.py             # Type check
-bandit -r .               # Security scan
-```
 
 ### Working with .sxt Files
 
@@ -155,7 +130,7 @@ tyrec scripts/code_to_type_test.sxt
 
 The project uses GitHub Actions for continuous integration:
 
-- **Tests**: Runs on Python 3.8-3.12 for every push
+- **Tests**: Runs on Python 3.9-3.12 for every push
 - **Code Quality**: Runs pre-commit, type checking, and security scans
 
 ### Local CI Simulation

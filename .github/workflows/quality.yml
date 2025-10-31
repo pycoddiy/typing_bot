@@ -14,7 +14,7 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: "3.11"
 
@@ -40,9 +40,9 @@ jobs:
 
     - name: Run type checking
       run: |
-        mypy --explicit-package-bases . || true
+        mypy --ignore-missing-imports tyrec.py structured_capture.py struct_editor.py
 
     - name: Security check with bandit
       run: |
-        bandit -r . -f json -o bandit-report.json || true
-        bandit -r . || true
+        bandit -r . -f json -o bandit-report.json
+        bandit -r .
