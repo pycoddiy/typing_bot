@@ -3,16 +3,16 @@ name = "typing-bot"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 dependencies = [
     "mock>=5.2.0",
     "pygetwindow>=0.0.9",
     "pynput>=1.8.1",
-    "pytest>=8.4.2",
 ]
 
 [project.optional-dependencies]
 dev = [
+    "pytest>=8.4.2",
     "pre-commit>=4.0.0",
     "black>=24.0.0",
     "isort>=5.12.0",
@@ -59,7 +59,7 @@ exclude = [
 
 [tool.black]
 line-length = 88
-target-version = ['py38', 'py39', 'py310', 'py311', 'py312']
+target-version = ['py39', 'py310', 'py311', 'py312']
 include = '\.pyi?$'
 extend-exclude = '''
 /(
@@ -82,7 +82,7 @@ line_length = 88
 known_first_party = ["typing_bot", "structured_capture", "struct_editor"]
 
 [tool.mypy]
-python_version = "3.8"
+python_version = "3.9"
 warn_return_any = false
 warn_unused_configs = true
 disallow_untyped_defs = false

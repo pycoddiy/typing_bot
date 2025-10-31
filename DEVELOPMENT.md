@@ -4,7 +4,7 @@ This guide explains how to set up your development environment for the typing_bo
 
 ## Prerequisites
 
-- Python 3.8 or higher
+- Python 3.9 or higher
 - Git
 - uv (recommended) or pip
 
