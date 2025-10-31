@@ -109,8 +109,6 @@ flake8 .                   # Lint code
 mypy tyrec.py             # Type check
 bandit -r .               # Security scan
 ```
-bandit -r .               # Security scan
-```
 
 ### Working with .sxt Files
 
